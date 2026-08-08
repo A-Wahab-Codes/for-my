@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Maryam 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose: #e8547a;
+    --deep-rose: #c4385a;
+    --blush: #f9d0dc;
+    --cream: #fdf6f8;
+    --wine: #7a1e3a;
+    --gold: #d4a852;
+    --text: #3a1020;
+  }
+
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    background: #1a0510;
+    color: var(--text);
+  }
+
+  /* ── SCREENS ── */
+  .screen {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.8s ease;
+    text-align: center; padding: 24px;
+  }
+  .screen.active { opacity: 1; pointer-events: all; }
+
+  /* ── FLOATING HEARTS (canvas) ── */
+  #heartCanvas {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── SCREEN 1: OPENING ── */
+  #s1 {
+    background: linear-gradient(160deg, #1a0510 0%, #2d0a1e 50%, #1a0510 100%);
+    z-index: 1;
+  }
+  #s1 .card {
+    position: relative; z-index: 2;
+    animation: floatCard 4s ease-in-out infinite;
+  }
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(14px, 3.5vw, 18px);
+    letter-spacing: 0.25em;
+    color: var(--rose);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 1s 0.4s forwards;
+  }
+  .title-main {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 10vw, 80px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.1;
+    opacity: 0;
+    animation: fadeUp 1s 0.7s forwards;
+    text-shadow: 0 0 40px rgba(232,84,122,0.4);
+  }
+  .title-main span { color: var(--rose); }
+  .divider-heart {
+    margin: 20px auto;
+    font-size: 22px;
+    opacity: 0;
+    animation: fadeUp 1s 1s forwards;
+  }
+  .open-btn {
+    opacity: 0;
+    animation: fadeUp 1s 1.3s forwards;
+    margin-top: 32px;
+    padding: 16px 40px;
+    border-radius: 50px;
+    border: 1.5px solid var(--rose);
+    background: transparent;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .open-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--rose);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+    z-index: -1;
+  }
+  .open-btn:hover::before { transform: scaleX(1); }
+  .open-btn:hover { border-color: var(--rose); color: white; }
+
+  /* ── SCREEN 2: APOLOGY ── */
+  #s2 {
+    background: linear-gradient(160deg, #1a0510, #2d0a1e, #1a0510);
+    z-index: 1;
+  }
+  .apology-card {
+    position: relative; z-index: 2;
+    background: rgba(253,246,248,0.06);
+    border: 1px solid rgba(232,84,122,0.25);
+    border-radius: 24px;
+    padding: clamp(32px, 6vw, 56px);
+    max-width: 580px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 80px rgba(232,84,122,0.12);
+  }
+  .apology-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 8vw, 58px);
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .apology-name span { color: var(--rose); }
+  .apology-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    letter-spacing: 0.2em;
+    color: var(--rose);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .apology-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 2.5vw, 21px);
+    font-style: italic;
+    line-height: 1.8;
+    color: rgba(253,246,248,0.85);
+    min-height: 80px;
+  }
+  #typewriter-cursor {
+    display: inline-block;
+    width: 2px; height: 1.1em;
+    background: var(--rose);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 0.8s step-end infinite;
+  }
+  .apology-btn {
+    margin-top: 32px;
+    padding: 14px 36px;
+    border-radius: 50px;
+    border: 1.5px solid var(--rose);
+    background: var(--rose);
+    color: white;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.3s;
+    opacity: 0;
+  }
+  .apology-btn:hover { background: var(--deep-rose); }
+  .apology-btn.visible { opacity: 1; transition: opacity 0.6s ease, background 0.3s; }
+
+  /* ── SCREEN 3: THE QUESTION ── */
+  #s3 {
+    background: linear-gradient(160deg, #1a0510, #2d0a1e, #1a0510);
+    z-index: 1;
+  }
+  .q-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 7vw, 52px);
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 12px;
+    text-shadow: 0 0 30px rgba(232,84,122,0.3);
+    position: relative; z-index: 2;
+  }
+  .q-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    letter-spacing: 0.2em;
+    color: var(--rose);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    position: relative; z-index: 2;
+  }
+  .q-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative; z-index: 2;
+  }
+  .btn-yes {
+    padding: 16px 44px;
+    border-radius: 50px;
+    border: none;
+    background: linear-gradient(135deg, var(--rose), var(--deep-rose));
+    color: white;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(232,84,122,0.4);
+    animation: heartbeat 1.4s ease-in-out infinite;
+    letter-spacing: 0.06em;
+  }
+  .btn-no {
+    padding: 14px 36px;
+    border-radius: 50px;
+    border: 1.5px solid rgba(232,84,122,0.4);
+    background: transparent;
+    color: rgba(253,246,248,0.7);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    position: absolute;
+    transition: top 0.15s ease, left 0.15s ease;
+  }
+
+  /* ── SCREEN 4: HURRAY ── */
+  #s4 {
+    background: radial-gradient(ellipse at center, #3a0820 0%, #1a0510 70%);
+    z-index: 2;
+  }
+  .hurray-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 14vw, 110px);
+    font-style: italic;
+    color: var(--cream);
+    text-shadow: 0 0 60px rgba(232,84,122,0.6);
+    animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    position: relative; z-index: 2;
+  }
+  .hurray-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 3vw, 22px);
+    color: var(--blush);
+    margin-top: 16px;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    position: relative; z-index: 2;
+  }
+  .next-btn {
+    margin-top: 36px;
+    padding: 16px 44px;
+    border-radius: 50px;
+    border: 1.5px solid var(--rose);
+    background: transparent;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.3s;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.8s 1.5s both;
+  }
+  .next-btn:hover { background: var(--rose); border-color: var(--rose); }
+  #confettiCanvas {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  }
+
+  /* ── SCREEN 5: FINAL LETTER ── */
+  #s5 {
+    background: linear-gradient(160deg, #1a0510 0%, #2d0a1e 50%, #1a0510 100%);
+    z-index: 1;
+    overflow-y: auto;
+    padding: 40px 24px 60px;
+    justify-content: flex-start;
+  }
+  .letter-wrap {
+    position: relative; z-index: 2;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .letter-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: var(--rose);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeUp 1s 0.2s both;
+  }
+  .letter-card {
+    background: rgba(253,246,248,0.05);
+    border: 1px solid rgba(232,84,122,0.2);
+    border-radius: 24px;
+    padding: clamp(28px, 6vw, 52px);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 0 100px rgba(232,84,122,0.1), inset 0 0 40px rgba(232,84,122,0.03);
+    animation: fadeUp 1s 0.4s both;
+  }
+  .letter-salutation {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 5vw, 36px);
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 24px;
+  }
+  .letter-salutation span { color: var(--rose); }
+  .letter-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 2.2vw, 20px);
+    font-style: italic;
+    line-height: 2;
+    color: rgba(253,246,248,0.88);
+  }
+  .letter-body p { margin-bottom: 20px; }
+  .letter-closing {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(232,84,122,0.2);
+  }
+  .letter-sign {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 3.5vw, 26px);
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.6;
+  }
+  .letter-sign span { color: var(--rose); }
+  .roses-row {
+    margin-top: 28px;
+    font-size: 26px;
+    letter-spacing: 6px;
+    animation: fadeUp 1s 1.4s both;
+    opacity: 0;
+  }
+  .glow-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,84,122,0.6) 0%, transparent 70%);
+    pointer-events: none;
+    animation: drift linear infinite;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(232,84,122,0.4); }
+    14% { transform: scale(1.06); box-shadow: 0 0 50px rgba(232,84,122,0.6); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.04); }
+    56% { transform: scale(1); }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0; }
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.4) rotate(-4deg); }
+    to { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  @keyframes drift {
+    from { transform: translateY(0) scale(1); opacity: 0.6; }
+    to { transform: translateY(-120px) scale(0.3); opacity: 0; }
+  }
+  @keyframes petal-float {
+    0% { transform: translate(0,0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translate(var(--dx, 40px), -300px) rotate(var(--rot, 360deg)); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="heartCanvas"></canvas>
+
+<!-- SCREEN 1: OPENING -->
+<div class="screen active" id="s1">
+  <div class="card">
+    <p class="subtitle">A message from the heart</p>
+    <h1 class="title-main">For <span>Maryam</span> 💕</h1>
+    <div class="divider-heart">❤️ · ✦ · ❤️</div>
+    <button class="open-btn" onclick="goTo('s2')">Open this 💌</button>
+  </div>
+</div>
+
+<!-- SCREEN 2: APOLOGY -->
+<div class="screen" id="s2">
+  <div class="apology-card">
+    <div class="apology-name"><span>Maryam</span> ❤️</div>
+    <div class="apology-tagline">✦ A letter of truth ✦</div>
+    <div class="apology-text" id="apology-text"><span id="typewriter-cursor"></span></div>
+    <button class="apology-btn" id="apology-next" onclick="goTo('s3')">Continue 💕</button>
+  </div>
+</div>
+
+<!-- SCREEN 3: THE QUESTION -->
+<div class="screen" id="s3">
+  <div class="q-title">Would you forgive me? 🥺</div>
+  <div class="q-sub">✦ your answer matters ✦</div>
+  <div class="q-buttons" id="qbtn-wrap">
+    <button class="btn-yes" onclick="goTo('s4')">Yes ❤️</button>
+    <button class="btn-no" id="btn-no" onmouseenter="dodgeNo()" ontouchstart="dodgeNo()">No 🥲</button>
+  </div>
+</div>
+
+<!-- SCREEN 4: HURRAY -->
+<div class="screen" id="s4">
+  <canvas id="confettiCanvas"></canvas>
+  <div class="hurray-text">HURRAY! 🎉❤️</div>
+  <div class="hurray-sub">She said yes… my heart is smiling 🥹</div>
+  <button class="next-btn" onclick="goTo('s5')">Click here 💌</button>
+</div>
+
+<!-- SCREEN 5: FINAL LETTER -->
+<div class="screen" id="s5">
+  <div class="letter-wrap">
+    <div class="letter-eyebrow">✦ written with love .. From Abdulwahab ✦</div>
+    <div class="letter-card">
+      <div class="letter-salutation">My dearest <span>Maryam</span>,</div>
+      <div class="letter-body">
+        <p>I know I hurt you. And there is no version of this that lets me off easy — I owe you more than that, more than empty words, more than a hurried "I'm sorry." You deserve to hear the real thing.</p>
+        <p>I thought about how to say this a hundred times, and every time I get to the part where I picture your face — that warmth you carry without even knowing it — the words just fall apart.</p>
+        <p>You are someone who deserves to be treasured, every single day. Not just when it's convenient. Not just when things are easy. I forgot that for a moment, and I hate that I did.</p>
+        <p>I know your heart. I know how much it takes for you to trust someone. And I know what it costs you when that trust gets bruised. I'm sorry, Maryam. Genuinely, completely sorry — not because I got caught, but because you felt the weight of something that I should never have let fall on you.</p>
+        <p>My heart still chooses you. In every quiet version of the future I imagine — it is still you. It has always been you.</p>
+      </div>
+      <div class="letter-closing">
+        <div class="letter-sign">
+          I'm really sorry, <span>Maryam</span>. ❤️<br>
+          My heart still chooses you. 🫶🏽<br>
+          <br>
+          With everything I have,<br>
+          <em>.Abdulwahab.</em> ✦
+        </div>
+      </div>
+    </div>
+    <div class="roses-row" id="roses-row">🌹 ❤️ 🌹 ❤️ 🌹 ❤️ 🌹</div>
+  </div>
+</div>
+
+<script>
+// ── FLOATING HEARTS ON CANVAS ──────────────────────────────────
+const hCanvas = document.getElementById('heartCanvas');
+const hCtx = hCanvas.getContext('2d');
+let hearts = [];
+
+function resizeCanvas() {
+  hCanvas.width = innerWidth;
+  hCanvas.height = innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function heartPath(ctx, x, y, size) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(size, size);
+  ctx.beginPath();
+  ctx.moveTo(0, -0.3);
+  ctx.bezierCurveTo(0.5, -0.9, 1, -0.2, 0, 0.6);
+  ctx.bezierCurveTo(-1, -0.2, -0.5, -0.9, 0, -0.3);
+  ctx.closePath();
+  ctx.restore();
+}
+
+function spawnHeart() {
+  hearts.push({
+    x: Math.random() * innerWidth,
+    y: innerHeight + 20,
+    size: 6 + Math.random() * 16,
+    speed: 0.4 + Math.random() * 0.8,
+    drift: (Math.random() - 0.5) * 0.4,
+    alpha: 0.15 + Math.random() * 0.35,
+    wobble: Math.random() * Math.PI * 2,
+    wobbleSpeed: 0.01 + Math.random() * 0.02,
+    color: ['#e8547a','#c4385a','#f0a0b8','#d4a852','#ffffff'][Math.floor(Math.random()*5)]
+  });
+}
+
+function drawHearts() {
+  hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+  hearts.forEach(h => {
+    h.y -= h.speed;
+    h.x += h.drift + Math.sin(h.wobble) * 0.5;
+    h.wobble += h.wobbleSpeed;
+    hCtx.globalAlpha = h.alpha;
+    hCtx.fillStyle = h.color;
+    heartPath(hCtx, h.x, h.y, h.size);
+    hCtx.fill();
+  });
+  hCtx.globalAlpha = 1;
+  hearts = hearts.filter(h => h.y > -40);
+  requestAnimationFrame(drawHearts);
+}
+setInterval(spawnHeart, 400);
+drawHearts();
+
+// ── SCREEN TRANSITIONS ─────────────────────────────────────────
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 's2') startTypewriter();
+  if (id === 's3') initNoButton();
+  if (id === 's4') startConfetti();
+  if (id === 's5') spawnGlowParticles();
+}
+
+// ── TYPEWRITER ─────────────────────────────────────────────────
+const apologyMsg = "I didn't mean to hurt you. I know that doesn't fix it — but it's the truth. You never deserved what I put you through, and I think about it more than you know. You are one of the most genuine people I've ever known, and I took that for granted. I'm truly sorry, Maryam.";
+
+function startTypewriter() {
+  const el = document.getElementById('apology-text');
+  const cursor = document.getElementById('typewriter-cursor');
+  let i = 0;
+  el.innerHTML = '';
+  el.appendChild(cursor);
+  const btn = document.getElementById('apology-next');
+  btn.classList.remove('visible');
+
+  function type() {
+    if (i < apologyMsg.length) {
+      cursor.insertAdjacentText('beforebegin', apologyMsg[i]);
+      i++;
+      setTimeout(type, 28 + Math.random() * 18);
+    } else {
+      cursor.style.display = 'none';
+      btn.classList.add('visible');
+    }
+  }
+  setTimeout(type, 600);
+}
+
+// ── NO BUTTON DODGE ────────────────────────────────────────────
+function initNoButton() {
+  const btn = document.getElementById('btn-no');
+  const wrap = document.getElementById('qbtn-wrap');
+  btn.style.position = 'fixed';
+  btn.style.top = '62%';
+  btn.style.left = '58%';
+}
+
+let dodgeCount = 0;
+function dodgeNo() {
+  dodgeCount++;
+  const margin = 60;
+  const maxX = innerWidth - 140 - margin;
+  const maxY = innerHeight - 60 - margin;
+  const x = margin + Math.random() * maxX;
+  const y = margin + Math.random() * maxY;
+  const btn = document.getElementById('btn-no');
+  btn.style.top = y + 'px';
+  btn.style.left = x + 'px';
+  btn.style.transition = `top ${dodgeCount < 3 ? 0.3 : 0.15}s ease, left ${dodgeCount < 3 ? 0.3 : 0.15}s ease`;
+}
+
+// ── CONFETTI ───────────────────────────────────────────────────
+function startConfetti() {
+  const cvs = document.getElementById('confettiCanvas');
+  cvs.width = innerWidth; cvs.height = innerHeight;
+  const ctx = cvs.getContext('2d');
+  const pieces = [];
+  const colors = ['#e8547a','#f9d0dc','#d4a852','#ffffff','#c4385a','#f0a0b8'];
+  const shapes = ['rect','circle','heart'];
+
+  for (let i = 0; i < 180; i++) {
+    pieces.push({
+      x: Math.random() * innerWidth,
+      y: -20 - Math.random() * innerHeight,
+      size: 6 + Math.random() * 10,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      shape: shapes[Math.floor(Math.random() * shapes.length)],
+      speed: 2 + Math.random() * 4,
+      drift: (Math.random() - 0.5) * 2,
+      rot: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 6,
+      alpha: 0.8 + Math.random() * 0.2
+    });
+  }
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    pieces.forEach(p => {
+      p.y += p.speed;
+      p.x += p.drift;
+      p.rot += p.rotSpeed;
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      if (p.shape === 'rect') {
+        ctx.fillRect(-p.size/2, -p.size/4, p.size, p.size/2);
+      } else if (p.shape === 'circle') {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.size/2, 0, Math.PI*2);
+        ctx.fill();
+      } else {
+        ctx.scale(p.size/20, p.size/20);
+        ctx.beginPath();
+        ctx.moveTo(0, -3);
+        ctx.bezierCurveTo(5, -9, 10, -2, 0, 6);
+        ctx.bezierCurveTo(-10, -2, -5, -9, 0, -3);
+        ctx.fill();
+      }
+      ctx.restore();
+    });
+    ctx.globalAlpha = 1;
+    pieces.forEach(p => { if (p.y > innerHeight + 20) { p.y = -20; p.x = Math.random() * innerWidth; } });
+  }
+
+  let confettiFrame;
+  function loop() { drawConfetti(); confettiFrame = requestAnimationFrame(loop); }
+  loop();
+  setTimeout(() => cancelAnimationFrame(confettiFrame), 8000);
+}
+
+// ── GLOW PARTICLES FOR LETTER ──────────────────────────────────
+function spawnGlowParticles() {
+  const s5 = document.getElementById('s5');
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'glow-particle';
+      const size = 80 + Math.random() * 120;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random()*100}%;
+        top:${40+Math.random()*50}%;
+        animation-duration:${4+Math.random()*4}s;
+        animation-delay:${Math.random()*3}s;
+      `;
+      s5.appendChild(p);
+    }, i * 300);
+  }
+
+  // Roses row fade-in
+  const roses = document.getElementById('roses-row');
+  setTimeout(() => { roses.style.opacity = '1'; roses.style.animation = 'fadeUp 1s forwards'; }, 2000);
+}
+</script>
+</body>
+</html>
